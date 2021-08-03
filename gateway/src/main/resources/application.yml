@@ -1,0 +1,24 @@
+server:
+  port: 8110
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      discovery:
+        username: nacos
+        password: nacos
+        namespace: public
+    gateway:
+      routes:
+        - id: user-router
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+
+        - id: login-router
+          uri: lb://user-service
+          predicates:
+            - Path=/sys/**

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeng.tieba.mapper.UserMapper">
+    <select id="getUserById" resultType="com.zeng.tieba.entity.SysUser">
+        select * from SYS_USER where user_id = #{userId}
+    </select>
+
+    <select id="getUserByName" resultType="com.zeng.tieba.entity.SysUser">
+        select * from SYS_USER where user_name = #{userName}
+    </select>
+
+    <insert id="addNewUser" parameterType="com.zeng.tieba.entity.SysUser">
+        insert into SYS_USER(user_id, user_name, password, user_role, email)
+        values (#{sysUser.userId},
+                #{sysUser.userName},
+                #{sysUser.password},
+                #{sysUser.userRole},
+                #{sysUser.email})
+    </insert>
+
+    <update id="updateUserPassword" parameterType="com.zeng.tieba.entity.SysUser">
+        update SYS_USER set password = #{sysUser.password}
+        where user_id = #{sysUser.userId}
+    </update>
+
+    <update id="updateUserToken" parameterType="com.zeng.tieba.entity.SysUser">
+        update SYS_USER set last_token = #{sysUser.lastToken}
+        where user_id = #{sysUser.userId}
+    </update>
+
+</mapper>

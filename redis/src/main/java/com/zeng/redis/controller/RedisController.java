@@ -14,7 +14,7 @@ public class RedisController {
     private RedisUtils redisUtils;
 
     //过期时间1天
-    private final long EXPIRATION = 3600 * 24L;
+    private final long EXPIRATION = 60;
 
     @RequestMapping("/redis/addToken")
     public boolean addToken(@RequestParam("token") String token, @RequestParam("userId") String userId){

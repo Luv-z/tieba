@@ -4,6 +4,7 @@ import com.api.service.RedisService;
 import com.api.service.UserService;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
-public class TokenFilter implements GatewayFilter, Ordered {
+public class TokenFilter implements GlobalFilter, Ordered {
 
     @Resource
     private RedisService redisService;
@@ -36,14 +37,8 @@ public class TokenFilter implements GatewayFilter, Ordered {
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         //token不能为空
         if(token != null && !token.isEmpty()){
-            String userId = redisService.getToken(token);
-            //获取到userId
-            if(userId != null && !userId.isEmpty()){
-                Timestamp nowTime = new Timestamp(new Date().getTime());
-                //判断token是否过期
-                if(nowTime.getTime() - userService.getUserLastTokenById(userId).getTime() <= redisService.getExpire(token)){
-                    return chain.filter(exchange);
-                }
+            if(redisService.hasToken(token)){
+                return chain.filter(exchange);
             }
         }
         exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
@@ -52,6 +47,6 @@ public class TokenFilter implements GatewayFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return -200;
     }
 }

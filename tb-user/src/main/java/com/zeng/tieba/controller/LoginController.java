@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -22,6 +24,13 @@ public class LoginController {
 
     @Resource
     private RedisService redisService;
+
+    @RequestMapping("/sys/axiosTest")
+    public ResultVo axiosTest(@RequestParam("userName") String userName){
+        Map<String, String> map = new HashMap<>();
+        map.put(userName, UUIDUtils.createUUID());
+        return new ResultVo("200","请求成功", map);
+    }
 
     @RequestMapping("/sys/login")
     public ResultVo login(@RequestParam("userName") String userName,
